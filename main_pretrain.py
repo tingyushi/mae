@@ -79,7 +79,7 @@ def get_args_parser():
     parser.add_argument('--warmup_epochs', type=int, default=40, metavar='N',
                         help='epochs to warmup LR')
     
-    parser.add_argument('--save_every', type=int, default=20
+    parser.add_argument('--save_every', type=int, default=20,
                         help='save model every how many epochs')
 
     # Dataset parameters
