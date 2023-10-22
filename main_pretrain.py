@@ -123,9 +123,19 @@ def main(args):
     transform_train = transforms.Compose([
             transforms.RandomResizedCrop(args.input_size, scale=(0.2, 1.0), interpolation=3),  # 3 is bicubic
             transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+            transforms.ToTensor()
+
+            # remove this normalization since we have brand new dataset
+            #transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+    
+    # remove "train" because of different folder structure
+    """
     dataset_train = datasets.ImageFolder(os.path.join(args.data_path, 'train'), transform=transform_train)
+    """
+
+    dataset_train = datasets.ImageFolder(os.path.join(args.data_path), transform=transform_train)
+
     print(dataset_train)
 
     if True:  # args.distributed:
