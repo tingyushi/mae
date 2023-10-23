@@ -143,12 +143,15 @@ def main(args):
 
     # simple augmentation
     transform_train = transforms.Compose([
+            
+            # read grayscale images, single channel
+            transforms.Grayscale(num_output_channels = 1),
             transforms.RandomResizedCrop(args.input_size, scale=(0.2, 1.0), interpolation=3),  # 3 is bicubic
             transforms.RandomHorizontalFlip(),
-            transforms.ToTensor()
+            transforms.ToTensor(),
 
-            # remove this normalization since we have brand new dataset
-            #transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            # calculated according to a specific dataset
+            transforms.Normalize(mean=[0.1535], std=[0.2594])
             ])
     
     # remove "train" because of different folder structure
