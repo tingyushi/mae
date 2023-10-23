@@ -160,8 +160,9 @@ def main(args):
     """
 
     dataset_train = datasets.ImageFolder(os.path.join(args.data_path), transform=transform_train)
-
+    
     print(dataset_train)
+    
 
     if True:  # args.distributed:
         num_tasks = misc.get_world_size()
