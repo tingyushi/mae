@@ -146,8 +146,12 @@ def main(args):
             
             # read grayscale images, single channel
             transforms.Grayscale(num_output_channels = 1),
+
+            # two transforms for data augmentation
             transforms.RandomResizedCrop(args.input_size, scale=(0.2, 1.0), interpolation=3),  # 3 is bicubic
             transforms.RandomHorizontalFlip(),
+
+            # convert images to tensor
             transforms.ToTensor(),
 
             # calculated according to a specific dataset
@@ -158,12 +162,9 @@ def main(args):
     """
     dataset_train = datasets.ImageFolder(os.path.join(args.data_path, 'train'), transform=transform_train)
     """
-
     dataset_train = datasets.ImageFolder(os.path.join(args.data_path), transform=transform_train)
-    
     print(dataset_train)
     
-
     if True:  # args.distributed:
         num_tasks = misc.get_world_size()
         global_rank = misc.get_rank()
