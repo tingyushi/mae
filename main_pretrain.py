@@ -148,14 +148,16 @@ def main(args):
             transforms.Grayscale(num_output_channels = 1),
 
             # two transforms for data augmentation
+            '''
             transforms.RandomResizedCrop(args.input_size, scale=(0.2, 1.0), interpolation=3),  # 3 is bicubic
             transforms.RandomHorizontalFlip(),
-
+            '''
+            
             # convert images to tensor
             transforms.ToTensor(),
 
-            # calculated according to a specific dataset
-            transforms.Normalize(mean=[0.1535], std=[0.2594])
+            # calculated according to the MSD dataset
+            transforms.Normalize(mean=[0.1559], std=[0.2610])
             ])
     
     # remove "train" because of different folder structure
@@ -175,6 +177,7 @@ def main(args):
     else:
         sampler_train = torch.utils.data.RandomSampler(dataset_train)
 
+    # only save log information in master process
     if global_rank == 0 and args.log_dir is not None:
         os.makedirs(args.log_dir, exist_ok=True)
         log_writer = SummaryWriter(log_dir=args.log_dir)
@@ -224,6 +227,7 @@ def main(args):
     print(optimizer)
     loss_scaler = NativeScaler()
 
+    # resume training 
     misc.load_model(args=args, model_without_ddp=model_without_ddp, optimizer=optimizer, loss_scaler=loss_scaler)
 
     print(f"Start training for {args.epochs} epochs")
@@ -231,17 +235,14 @@ def main(args):
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
             data_loader_train.sampler.set_epoch(epoch)
-        train_stats = train_one_epoch(
-            model, data_loader_train,
-            optimizer, device, epoch, loss_scaler,
-            log_writer=log_writer,
-            args=args
-        )
+        train_stats = train_one_epoch(model, data_loader_train, optimizer, 
+                                      device, epoch, loss_scaler,
+                                      log_writer=log_writer, args=args)
 
+        # save model
         if args.output_dir and (epoch % args.save_every == 0 or epoch + 1 == args.epochs):
-            misc.save_model(
-                args=args, model=model, model_without_ddp=model_without_ddp, optimizer=optimizer,
-                loss_scaler=loss_scaler, epoch=epoch)
+            misc.save_model(args=args, model=model, model_without_ddp=model_without_ddp, 
+                            optimizer=optimizer, loss_scaler=loss_scaler, epoch=epoch)
 
         log_stats = {**{f'train_{k}': v for k, v in train_stats.items()},
                         'epoch': epoch,}
