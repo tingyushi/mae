@@ -148,11 +148,11 @@ def main(args):
             transforms.Grayscale(num_output_channels = 1),
 
             # two transforms for data augmentation
-            '''
-            transforms.RandomResizedCrop(args.input_size, scale=(0.2, 1.0), interpolation=3),  # 3 is bicubic
-            transforms.RandomHorizontalFlip(),
-            '''
             
+            # transforms.RandomResizedCrop(args.input_size, scale=(0.2, 1.0), interpolation=3),  # 3 is bicubic
+            # transforms.RandomHorizontalFlip(),
+            
+
             # convert images to tensor
             transforms.ToTensor(),
 
