@@ -156,8 +156,12 @@ def main(args):
             # convert images to tensor
             transforms.ToTensor(),
 
-            # calculated according to the MSD dataset
-            transforms.Normalize(mean=[0.1559], std=[0.2610])
+            # # calculated according to the MSD dataset (clipped)
+            # transforms.Normalize(mean=[0.1559], std=[0.2610])
+
+            # calculated according to the MSD dataset (not clipped)
+            transforms.Normalize(mean=[0.1473], std=[0.1720])
+
             ])
     
     # remove "train" because of different folder structure
