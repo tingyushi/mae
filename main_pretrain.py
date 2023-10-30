@@ -112,6 +112,12 @@ def get_args_parser():
     
     parser.set_defaults(pin_mem=True)
 
+    # add parameters for mean and std for the dataset
+    parser.add_argument('--mean', type=float)
+
+    parser.add_argument('--std', type=float)
+
+
     # distributed training parameters
     parser.add_argument('--world_size', default=1, type=int,
                         help='number of distributed processes')
@@ -156,12 +162,7 @@ def main(args):
             # convert images to tensor
             transforms.ToTensor(),
 
-            # # calculated according to the MSD dataset (clipped)
-            # transforms.Normalize(mean=[0.1559], std=[0.2610])
-
-            # calculated according to the MSD dataset (not clipped)
-            transforms.Normalize(mean=[0.1473], std=[0.1720])
-
+            transforms.Normalize(mean=[args.mean], std=[args.std])
             ])
     
     # remove "train" because of different folder structure
